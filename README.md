@@ -35,7 +35,10 @@ This is a comparison of target sentences generation given a source sequence betw
 - [ ] Install and arrange an environment that meets the prerequisites (use below subsection)
 - [ ] Pycharm is recommended for code development
 - [ ] Clone this directory to your computer
-- [ ] Call main using suitable arguments from a console for demonstrations or just using code
+- [ ] Train a cross-entropy seq2seq model using 'train_crossent' function
+- [ ] Train RL models using appropriate functions (e.g. use 'train_rl_MMI' to use MMI criterion for policy gradient)
+- [ ] Test models using automatic evaluations using 'test_all_modells' 
+- [ ] Generate responces using 'use_model'
 
 ### Prerequisites
 
@@ -43,60 +46,152 @@ Before starting, make sure you already have the followings, if you don't - you s
 - [ ] the code was tested only on python 3.6 
 - [ ] numpy
 - [ ] scipy
-- [ ] pandas
 - [ ] pickle
+- [ ] pytorch
+- [ ] TensorboardX
 
 
-## Running the Code - train, tests, competition
-Parameters for main function ( can be seen when writing --help ): 
+## Running the Code 
 
-| Name Of Param     | Description                              | Default Value | Type       | 
+### Training all models
+
+#### Train Cross-entropy Seq2Seq and backward Seq2Seq 
+Parameters for calling 'train_crossent' ( can be seen when writing --help ): 
+
+| Name Of Param  | Description                             | Default Value | Type       | 
 | --- | --- | --- | --- | 
-| result_dir_name   | path to results directory                |               |            | 
-| data_set          | which data-set to work on - 1 or 2       | 1             | int        | 
-| operatin_mode     | Choose between train\test\comp           | 'comp'        | str        | 
-| reg_lambda        | Constant - coeeficient for regulrization | 3e-05         | np.float64 | 
-| threshold         | Constant - feature apearance threshold   | 2             |  int       | 
+| SAVES_DIR      | Save directory                          | 'saves'       | str        | 
+| name           | Specific model saves directory          | 'seq2seq'     | str        | 
+| BATCH_SIZE     | Batch Size for training                 | 32            | int        | 
+| LEARNING_RATE  | Learning Rate                           | 1e-3          | float      | 
+| MAX_EPOCHES    | Number of training iterations           | 100           | int        | 
+| TEACHER_PROB   | Probability to force reference inputs   | 0.5           | float      | 
+| data           | Genre to use - for data                 | 'comedy'      | str        | 
+| train_backward | Choose - train backward/forward model   | False         | bool       |
 
-
-This project solves works on two differen data-saets. To test each set you need to run different commands.
-
-### First Set
-Run Training:
+Run Seq2Seq using:
 ```
-python main.py <Result Directory Name> -data_set <1 (also default)> -operation_mode <'train'> -reg_lambda <Pick a float number> -threshold <Pick an integer>
-```
-
-Check performance on test set:
-```
-python main.py <Result Directory Name> -data_set <1 (also default)> -operation_mode <'test'> -reg_lambda <*Keep Empty*> -threshold <*Keep Empty*>
-```
-Build competition atags:
-```
-python main.py <Result Directory Name> -data_set <1 (also default)> -operation_mode <'comp'(also default)> -reg_lambda <*Keep Empty*> -threshold <*Keep Empty*>
+python train_crossent.py -SAVES_DIR <'saves'> -name <'seq2seq'> -BATCH_SIZE <32> -LEARNING_RATE <0.001> -MAX_EPOCHES <100> -TEACHER_PROB <0.5> -data <'comedy'> -train_backward <False>
 ```
 
-### Second Set
-Run Training (There is no test set):
+Run backward Seq2Seq using:
 ```
-python main.py <Result Directory Name> -data_set <2> -operation_mode <'train'> -reg_lambda <Pick a float number> -threshold <Pick an integer>
+python train_crossent.py -SAVES_DIR <'saves'> -name <'backward_seq2seq'> -BATCH_SIZE <32> -LEARNING_RATE <0.001> -MAX_EPOCHES <100> -TEACHER_PROB <0.5> -data <'comedy'> -train_backward <True>
+``` 
+
+
+#### Train Policy Gradient using BLEU reward
+Parameters for calling 'train_rl_BLEU' ( can be seen when writing --help ): 
+
+| Name Of Param     | Description                             | Default Value                                   | Type       | 
+| --- | --- | --- | --- | 
+| SAVES_DIR         | Save directory                          | 'saves'       									| str        | 
+| name              | Specific model saves directory          | 'RL_BLUE'    									| str        | 
+| BATCH_SIZE        | Batch Size for training                 | 16            									| int        | 
+| LEARNING_RATE     | Learning Rate                           | 1e-4          									| float      | 
+| MAX_EPOCHES       | Number of training iterations           | 10000         									| int        | 
+| data              | Genre to use - for data                 | 'comedy'      									| str        | 
+| num_of_samples    | Number of samples per per each example  | 4                                               | int        | 
+| load_seq2seq_path | Pre-trained seq2seq model location      | 'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat' | str        | 
+
+Run using:
+```
+python train_rl_BLEU.py -SAVES_DIR <'saves'> -name <'RL_BLUE'> -BATCH_SIZE <16> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
+``` 
+
+#### Train Policy Gradient using MMI reward 
+Parameters for calling 'train_rl_MMI' ( can be seen when writing --help ): 
+
+| Name Of Param       | Description                             				  | Default Value                                  			 | Type       | 
+| --- | --- | --- | --- | 
+| SAVES_DIR           | Save directory                          				  | 'saves'       								   			 | str        | 
+| name                | Specific model saves directory          				  | 'RL_Mutual'									   			 | str        | 
+| BATCH_SIZE          | Batch Size for training                 				  | 32            								   			 | int        | 
+| LEARNING_RATE       | Learning Rate                           				  | 1e-4          								  			 | float      | 
+| MAX_EPOCHES         | Number of training iterations           				  | 10000         								   			 | int        | 
+| CROSS_ENT_PROB      | Probability to run a CE batch           				  | 0.3           								   			 | float      | 
+| TEACHER_PROB        | Probability to run an imitation batch in case of using CE | 0.8           								   		     | float      | 
+| data                | Genre to use - for data                 				  | 'comedy'      								    		 | str        | 
+| num_of_samples      | Number of samples per per each example  				  | 4                                               		 | int        | 
+| load_seq2seq_path   | Pre-trained seq2seq model location      			      | 'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'          | str        | 
+| laod_b_seq2seq_path | Pre-trained backward seq2seq model location 	    	  | 'Final_Saves/backward_seq2seq/epoch_080_0.780_0.104.dat' | str        | 
+
+Run using:
+```
+python train_rl_MMI.py -SAVES_DIR <'saves'> -name <'RL_Mutual'> -BATCH_SIZE <32> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -CROSS_ENT_PROB <0.3> -TEACHER_PROB <0.8> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'> -laod_b_seq2seq_path <'Final_Saves/backward_seq2seq/epoch_080_0.780_0.104.dat'>
+``` 
+
+#### Train Policy Gradient using Perplexity reward 
+Parameters for calling 'train_rl_PREPLEXITY' ( can be seen when writing --help ): 
+
+| Name Of Param       | Description                             				  | Default Value                                  	| Type       | 
+| --- | --- | --- | --- | 
+| SAVES_DIR           | Save directory                          				  | 'saves'       								   	| str        | 
+| name                | Specific model saves directory          				  | 'RL_PREPLEXITY'									| str        | 
+| BATCH_SIZE          | Batch Size for training                 				  | 32            								   	| int        | 
+| LEARNING_RATE       | Learning Rate                           				  | 1e-4          								  	| float      | 
+| MAX_EPOCHES         | Number of training iterations           				  | 10000         								   	| int        | 
+| CROSS_ENT_PROB      | Probability to run a CE batch           				  | 0.5           								   	| float      | 
+| TEACHER_PROB        | Probability to run an imitation batch in case of using CE | 0.5           								   	| float      | 
+| data                | Genre to use - for data                 				  | 'comedy'      								    | str        | 
+| num_of_samples      | Number of samples per per each example  				  | 4                                               | int        | 
+| load_seq2seq_path   | Pre-trained seq2seq model location      			      | 'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat' | str        | 
+
+Run using:
+```
+python train_rl_PREPLEXITY.py -SAVES_DIR <'saves'> -name <'RL_PREPLEXITY'> -BATCH_SIZE <32> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -CROSS_ENT_PROB <0.5> -TEACHER_PROB <0.5> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
 ```
 
-Build competition tags:
+#### Train Policy Gradient using Cosine Similarity reward 
+Parameters for calling 'train_rl_cosine' ( can be seen when writing --help ): 
+
+| Name Of Param     | Description                             | Default Value                                   | Type       | 
+| --- | --- | --- | --- | 
+| SAVES_DIR         | Save directory                          | 'saves'       									| str        | 
+| name              | Specific model saves directory          | 'RL_COSINE'    									| str        | 
+| BATCH_SIZE        | Batch Size for training                 | 16            									| int        | 
+| LEARNING_RATE     | Learning Rate                           | 1e-4          									| float      | 
+| MAX_EPOCHES       | Number of training iterations           | 10000         									| int        | 
+| data              | Genre to use - for data                 | 'comedy'      									| str        | 
+| num_of_samples    | Number of samples per per each example  | 4                                               | int        | 
+| load_seq2seq_path | Pre-trained seq2seq model location      | 'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat' | str        | 
+
+Run using:
 ```
-python main.py <Result Directory Name> -data_set <2> -operation_mode <'comp'(also default)> -reg_lambda <*Keep Empty*> -threshold <*Keep Empty*>
+python train_rl_cosine.py -SAVES_DIR <'saves'> -name <'RL_COSINE'> -BATCH_SIZE <16> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
+```
+
+### Testing all models
+There are two types of test: automatic and qualitative.
+
+For qualitative test, it is recommended to use the 'use_model' function with pycharm interface. I have suggested (can be seen in code) many sentences to use as source sentences. 
+
+For automatic test, a user can call 'test_all_modells' function, with the parameters:
+
+| Name Of Param       | Description                             				  | Default Value                                  			 | Type       | 
+| --- | --- | --- | --- | 
+| SAVES_DIR           | Save directory                          				  | 'saves'       								   			 | str        | 
+| BATCH_SIZE          | Batch Size for training                 				  | 32            								   			 | int        | 
+| data                | Genre to use - for data                 				  | 'comedy'      								    		 | str        | 
+| load_seq2seq_path   | Pre-trained seq2seq model location      			      | 'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat' 		 | str        | 
+| laod_b_seq2seq_path | Pre-trained backward seq2seq model location 	    	  | 'Final_Saves/backward_seq2seq/epoch_080_0.780_0.104.dat' | str        | 
+| bleu_model_path     | Pre-trained BLEU model location      	       		      | 'Final_Saves/RL_BLUE/bleu_0.135_177.dat'                 | str        | 
+| mutual_model_path   | Pre-trained MMI model location          			      | 'Final_Saves/RL_Mutual/epoch_180_-4.325_-7.192.dat'      | str        | 
+| prep_model_path     | Pre-trained Perplexity model location      			      | 'Final_Saves/RL_Perplexity/epoch_050_1.463_3.701.dat'    | str        | 
+| cos_model_path      | Pre-trained Cosine Similarity model location		      | 'Final_Saves/RL_COSINE/cosine_0.621_03.dat'              | str        | 
+
+
+Run using:
+```
+python test_all_modells.py -SAVES_DIR <'saves'> -BATCH_SIZE <16> -data <'comedy'> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'> -laod_b_seq2seq_path <'Final_Saves/backward_seq2seq/epoch_080_0.780_0.104.dat'> -bleu_model_path <'Final_Saves/RL_BLUE/bleu_0.135_177.dat'> -mutual_model_path <'Final_Saves/RL_Mutual/epoch_180_-4.325_-7.192.dat'> -prep_model_path <'Final_Saves/RL_Perplexity/epoch_050_1.463_3.701.dat'> -cos_model_path <'Final_Saves/RL_COSINE/cosine_0.621_03.dat'>
 ```
 
 
 ## Results for tests
-WE present below a table with test results on both data-sets. For more results and conclusions, please review 'NLP_Wet_1.pdf' file in this directory.
+WE present below a table with automatic tests results on 'comedy' movies. For more results and conclusions, please review 'Deep Reinforcement Learning For Language Models.pdf' file in this directory.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/NLP_Basic/master/Images/result_first_data_set.PNG" width="500" title="Result for first data-set">
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/NLP_Basic/master/Images/results_second_data-set.PNG" width="500" title="Result for second data-set">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/automatic evaluations.PNG" width="500" title="Automatic Evaluations">
 </p>
 
 ## Contributing
@@ -116,5 +211,5 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* Basic feature - "A Maximum Entropy Model for Part-Of-Speech Tagging", (Ratnaparkhi, 1996)  
-* Developed features- "Enriching the Knowledge Sources Used in a Maximum Entropy Part-of-Speech Tagger", (Toutanova and Manning, 2000)
+* Inspiration for using RL in text tasks - "Deep Reinforcement Learning For Dialogue Generation", (Ritter et al., 1996)  
+* Policy Gradient Implementation basics in dialogue agents - "Deep Reinforcement Learning Hands-On", by Maxim Lapan (Chapter 12)
