@@ -77,7 +77,11 @@ python train_crossent.py -SAVES_DIR <'saves'> -name <'seq2seq'> -BATCH_SIZE <32>
 Run backward Seq2Seq using:
 ```
 python train_crossent.py -SAVES_DIR <'saves'> -name <'backward_seq2seq'> -BATCH_SIZE <32> -LEARNING_RATE <0.001> -MAX_EPOCHES <100> -TEACHER_PROB <0.5> -data <'comedy'> -train_backward <True>
-``` 
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/Training CE Seq2Seq.PNG" width="700" title="Training CE Seq2Seq">
+</p> 
 
 
 #### Train Policy Gradient using BLEU reward
@@ -98,6 +102,10 @@ Run using:
 ```
 python train_rl_BLEU.py -SAVES_DIR <'saves'> -name <'RL_BLUE'> -BATCH_SIZE <16> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
 ``` 
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/Training BLEU RL.PNG" width="500" title="Training BLEU RL">
+</p>
 
 #### Train Policy Gradient using MMI reward 
 Parameters for calling 'train_rl_MMI' ( can be seen when writing --help ): 
@@ -121,6 +129,10 @@ Run using:
 python train_rl_MMI.py -SAVES_DIR <'saves'> -name <'RL_Mutual'> -BATCH_SIZE <32> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -CROSS_ENT_PROB <0.3> -TEACHER_PROB <0.8> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'> -laod_b_seq2seq_path <'Final_Saves/backward_seq2seq/epoch_080_0.780_0.104.dat'>
 ``` 
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/Training RL MMI.PNG" width="500" title="Training RL MMI">
+</p>
+
 #### Train Policy Gradient using Perplexity reward 
 Parameters for calling 'train_rl_PREPLEXITY' ( can be seen when writing --help ): 
 
@@ -142,6 +154,10 @@ Run using:
 python train_rl_PREPLEXITY.py -SAVES_DIR <'saves'> -name <'RL_PREPLEXITY'> -BATCH_SIZE <32> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -CROSS_ENT_PROB <0.5> -TEACHER_PROB <0.5> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
 ```
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/Training RL Perplexity.PNG" width="500" title="Training RL Perplexity">
+</p>
+
 #### Train Policy Gradient using Cosine Similarity reward 
 Parameters for calling 'train_rl_cosine' ( can be seen when writing --help ): 
 
@@ -160,6 +176,10 @@ Run using:
 ```
 python train_rl_cosine.py -SAVES_DIR <'saves'> -name <'RL_COSINE'> -BATCH_SIZE <16> -LEARNING_RATE <0.0001> -MAX_EPOCHES <10000> -data <'comedy'> -num_of_samples <4> -load_seq2seq_path <'Final_Saves/seq2seq/epoch_090_0.800_0.107.dat'>
 ```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/Training RL Cosine.PNG" width="500" title="Training RL Cosine">
+</p>
 
 ### Testing all models
 There are two types of test: automatic and qualitative.

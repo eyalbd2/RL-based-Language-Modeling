@@ -13,10 +13,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-SAVES_DIR', type=str, default='saves', help='Save directory')
-    parser.add_argument('-name', type=str, default='RL_BLUE', help='Specific model saves directory')
     parser.add_argument('-BATCH_SIZE', type=int, default=32, help='Batch Size for training')
     parser.add_argument('-data', type=str, default='comedy', help='Genre to use - for data')
-    parser.add_argument('-num_of_samples', type=int, default=4, help='Number of samples per per each example')
     parser.add_argument('-load_seq2seq_path', type=str, default='Final_Saves/seq2seq/epoch_090_0.800_0.107.dat',
                         help='Pre-trained seq2seq model location')
     parser.add_argument('-laod_b_seq2seq_path', type=str,
