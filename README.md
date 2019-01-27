@@ -25,7 +25,7 @@ Here we present a comparison of target sentences generation given a source seque
 <br/>
 <br/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/MMI comparison.PNG" width="400" title="MMI comparison">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/MMI comparison.PNG" width="800" title="MMI comparison">
 </p>
 This is a comparison of target sentences generation given a source sequence between a model of MMI trained using reinforcement learning policy gradient and a model which is calculating MMI only at test time.
  
