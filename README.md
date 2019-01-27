@@ -8,26 +8,27 @@ them, while offering some intuition regarding the results.
 The project implementation contains:
 1.	Basic Cross-entropy seq2seq model training - Using couple of tricks to get a faster training convergence
 2.	4 Policy Gradient model - using 4 different rewards (for further explanation, please refer to "Deep Reinforcement Learning For Language Models.pdf", which is in this repository): 
-	* BLUEU score
-	* Maximum Mutual Information score
-	* Perplexity score
-	* Cosine Similarity score
+	- [ ] BLUEU score
+	- [ ] Maximum Mutual Information score
+	- [ ] Perplexity score
+	- [ ] Cosine Similarity score
 3.	Testing generated dialogues - we test each of our models and sum up the results (for all results, please refer to "Deep Reinforcement Learning For Language Models.pdf", which is in this repository).  
 4.	Automatic evaluation - we evaluate each of the models using traditional NLP evaluation methods.
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/NLP_Basic/master/Images/conf_mat.PNG" width="400" title="Confusion Mat">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/many generated sequences.PNG" width="400" title="Many Generated Sequences">
 </p>
-Here we present an example of a confusion matrix, Notice that we present only the 10 tags which got maximum errors in rows, while colomns hold only tags that have caused a non negligible number of mistakes to the tags apear in rows.
+Here we present a comparison of target sentences generation given a source sequence between Perplexity, MMI, BLEU and Seq2Seq.
 <br/>
 <br/>
 <br/>
 <br/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/NLP_Basic/master/Images/viterbi_alg.PNG" width="400" title="Viterbi alg">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/MMI comparison.PNG" width="400" title="MMI comparison">
 </p>
-This is an outline of the beam search Viterbi we implement
+This is a comparison of target sentences generation given a source sequence between a model of MMI trained using reinforcement learning policy gradient and a model which is calculating MMI only at test time.
+ 
 
 ## Getting Started
 
