@@ -17,7 +17,7 @@ The project implementation contains:
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/many generated sequences.PNG" width="400" title="Many Generated Sequences">
+  <img src="https://raw.githubusercontent.com/eyalbd2/LanguageModel-UsingRL/master/Images/many generated sequences.PNG" width="1000" title="Many Generated Sequences">
 </p>
 Here we present a comparison of target sentences generation given a source sequence between Perplexity, MMI, BLEU and Seq2Seq.
 <br/>
